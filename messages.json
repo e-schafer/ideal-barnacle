@@ -1,7 +1,58 @@
-{"cat":{"weight":3,"height":2,"age":1,"color":"black"}}
-{"dog":{"weight":5,"height":3,"age":2,"color":"white"}}
-{"pig":{"weight":10,"height":5,"age":3,"color":"pink"}}
-{"cow":{"weight":20,"height":10,"age":4,"color":"brown"}}
-{"sheep":{"weight":15,"height":8,"age":5,"color":"white"}}
-{"horse":{"weight":30,"height":15,"age":6,"color":"brown"}}
-{"chicken":{"weight":1,"height":1,"age":1,"color":"white"}}
+[
+  {
+    "cat": {
+      "weight": 3,
+      "height": 2,
+      "age": 1,
+      "color": "black"
+    }
+  },
+  {
+    "dog": {
+      "weight": 5,
+      "height": 3,
+      "age": 2,
+      "color": "white"
+    }
+  },
+  {
+    "pig": {
+      "weight": 10,
+      "height": 5,
+      "age": 3,
+      "color": "pink"
+    }
+  },
+  {
+    "cow": {
+      "weight": 20,
+      "height": 10,
+      "age": 4,
+      "color": "brown"
+    }
+  },
+  {
+    "sheep": {
+      "weight": 15,
+      "height": 8,
+      "age": 5,
+      "color": "white"
+    }
+  },
+  {
+    "horse": {
+      "weight": 30,
+      "height": 15,
+      "age": 6,
+      "color": "brown"
+    }
+  },
+  {
+    "chicken": {
+      "weight": 1,
+      "height": 1,
+      "age": 1,
+      "color": "white"
+    }
+  }
+]

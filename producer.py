@@ -18,12 +18,12 @@ if __name__ == "__main__":
 
     with open("messages.json", "r", encoding="utf-8") as f:
         # read the data from the file
-        for data in f.readlines():
+
+        for data in json.load(f):
             # send a message to kafka
             producer.send("test", data)
             print(f"Sent: {data}")
             # flush the producer
             producer.flush()
-            sleep(10)
     # close the producer
     producer.close()

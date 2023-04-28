@@ -2,23 +2,32 @@
 This script is a simple example of how to consume data from kafka using spark
 """
 import json
-
-from pyspark.sql import SparkSession, Row
+from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 
 
-def sink_selector(data: Row):
+schema = StructType(
+    [
+        StructField("dtype", StringType(), True),
+        StructField("weight", IntegerType(), True),
+        StructField("height", IntegerType(), True),
+        StructField("age", IntegerType(), True),
+        StructField("color", StringType(), True),
+    ]
+)
+
+
+def parse_me(data: str):
     """
-
-    :param data: Row
-    :return: dict
+    This function parses the data from the kafka message
     """
+    js_data = json.loads(data)
+    main_key = str(list(js_data.keys())[0])
+    return {**js_data[main_key], "dtype": main_key}
 
-    stuff = json.loads(data.asDict()["value"])
-    print("new item")
-    print(stuff)
-    return stuff
 
+udf_read_my_json = F.udf(parse_me, schema)
 
 if __name__ == "__main__":
 
@@ -32,7 +41,7 @@ if __name__ == "__main__":
         )
         .getOrCreate()
     )
-    spark.sparkContext.setLogLevel("ERROR")
+    spark.sparkContext.setLogLevel("FATAL")
 
     # read a stream from kafka
     df = (
@@ -41,13 +50,20 @@ if __name__ == "__main__":
         .option("subscribe", "test")
         .option("startingOffsets", "earliest")
         .load()
+        .select(F.col("key").cast("String"), F.col("value").cast("String"))
     )
 
     ds = (
-        df.select(F.col("key").cast("String"), F.col("value").cast("String"))
-        .writeStream.format("console")
-        .foreach(sink_selector)
+        df.select(
+            F.col("value"),
+            udf_read_my_json(F.col("value")).alias("substruct"),
+        )
+        .select(F.col("substruct.*"))
+        .writeStream.option("truncate", False)
+        .format("console")
         .start()
     )
 
     ds.processAllAvailable()
+    ds.stop()
+    spark.stop()
